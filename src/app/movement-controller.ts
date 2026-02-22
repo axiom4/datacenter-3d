@@ -1,0 +1,120 @@
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+import {
+  ROOM_SIZE,
+  PLAYER_EYE_HEIGHT,
+  PLAYER_SPEED_MAX,
+  PLAYER_ACCELERATION,
+  PLAYER_FRICTION,
+  PLAYER_BOUNDARY_MARGIN,
+} from './constants';
+
+// ─── Rack collision geometry ────────────────────────────────────────────────
+const RACK_ROW_CENTERS_X = [-4.55, -1.45, 1.45, 4.55];
+const COLLISION_PADDING = 0.3;
+const RACK_HALF_W = (1.0 + COLLISION_PADDING * 2) / 2;
+const RACK_HALF_L = (6.0 + COLLISION_PADDING * 2) / 2;
+const BOUNDARY = ROOM_SIZE / 2 - PLAYER_BOUNDARY_MARGIN;
+
+// ─── Key → action map ───────────────────────────────────────────────────────
+const KEY_MAP: Record<string, 'forward' | 'backward' | 'left' | 'right'> = {
+  ArrowUp: 'forward',
+  KeyW: 'forward',
+  ArrowDown: 'backward',
+  KeyS: 'backward',
+  ArrowLeft: 'left',
+  KeyA: 'left',
+  ArrowRight: 'right',
+  KeyD: 'right',
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+export class MovementController {
+  private forward = false;
+  private backward = false;
+  private left = false;
+  private right = false;
+
+  private vForward = 0;
+  private vRight = 0;
+
+  constructor(
+    private readonly camera: THREE.PerspectiveCamera,
+    private readonly controls: PointerLockControls,
+  ) {}
+
+  onKeyChange(code: string, pressed: boolean): void {
+    switch (KEY_MAP[code]) {
+      case 'forward':
+        this.forward = pressed;
+        break;
+      case 'backward':
+        this.backward = pressed;
+        break;
+      case 'left':
+        this.left = pressed;
+        break;
+      case 'right':
+        this.right = pressed;
+        break;
+    }
+  }
+
+  update(delta: number): void {
+    const accel = PLAYER_ACCELERATION * delta;
+    const fric = PLAYER_FRICTION * delta;
+
+    // Accelerate
+    if (this.forward) this.vForward = Math.min(this.vForward + accel, PLAYER_SPEED_MAX);
+    if (this.backward) this.vForward = Math.max(this.vForward - accel, -PLAYER_SPEED_MAX);
+    if (this.right) this.vRight = Math.min(this.vRight + accel, PLAYER_SPEED_MAX);
+    if (this.left) this.vRight = Math.max(this.vRight - accel, -PLAYER_SPEED_MAX);
+
+    // Friction
+    if (!this.forward && !this.backward) this.vForward = this.decel(this.vForward, fric);
+    if (!this.right && !this.left) this.vRight = this.decel(this.vRight, fric);
+
+    // Move
+    const oldX = this.camera.position.x;
+    const oldZ = this.camera.position.z;
+    this.controls.moveForward(this.vForward * delta);
+    this.controls.moveRight(this.vRight * delta);
+    const newX = this.camera.position.x;
+    const newZ = this.camera.position.z;
+
+    // Sliding collision
+    if (this.collides(newX, newZ)) {
+      if (!this.collides(oldX, newZ)) {
+        this.camera.position.x = oldX; // slide along Z
+      } else if (!this.collides(newX, oldZ)) {
+        this.camera.position.z = oldZ; // slide along X
+      } else {
+        this.camera.position.x = oldX; // fully blocked
+        this.camera.position.z = oldZ;
+        this.vForward = 0;
+        this.vRight = 0;
+      }
+    }
+
+    this.clamp();
+    this.camera.position.y = PLAYER_EYE_HEIGHT;
+  }
+
+  private decel(v: number, fric: number): number {
+    if (v > 0) return Math.max(v - fric, 0);
+    if (v < 0) return Math.min(v + fric, 0);
+    return 0;
+  }
+
+  private collides(x: number, z: number): boolean {
+    if (z < -RACK_HALF_L || z > RACK_HALF_L) return false;
+    return RACK_ROW_CENTERS_X.some((cx) => x > cx - RACK_HALF_W && x < cx + RACK_HALF_W);
+  }
+
+  private clamp(): void {
+    const p = this.camera.position;
+    p.x = Math.max(-BOUNDARY, Math.min(BOUNDARY, p.x));
+    p.z = Math.max(-BOUNDARY, Math.min(BOUNDARY, p.z));
+  }
+}
