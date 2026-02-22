@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import {
-  ROOM_SIZE,
+  ROOM_WIDTH,
+  ROOM_DEPTH,
   PLAYER_EYE_HEIGHT,
   PLAYER_SPEED_MAX,
   PLAYER_ACCELERATION,
@@ -14,7 +15,8 @@ const RACK_ROW_CENTERS_X = [-4.55, -1.45, 1.45, 4.55];
 const COLLISION_PADDING = 0.3;
 const RACK_HALF_W = (1.0 + COLLISION_PADDING * 2) / 2;
 const RACK_HALF_L = (6.0 + COLLISION_PADDING * 2) / 2;
-const BOUNDARY = ROOM_SIZE / 2 - PLAYER_BOUNDARY_MARGIN;
+const BOUNDARY_X = ROOM_WIDTH / 2 - PLAYER_BOUNDARY_MARGIN;
+const BOUNDARY_Z = ROOM_DEPTH / 2 - PLAYER_BOUNDARY_MARGIN;
 
 // ─── Key → action map ───────────────────────────────────────────────────────
 const KEY_MAP: Record<string, 'forward' | 'backward' | 'left' | 'right'> = {
@@ -114,7 +116,7 @@ export class MovementController {
 
   private clamp(): void {
     const p = this.camera.position;
-    p.x = Math.max(-BOUNDARY, Math.min(BOUNDARY, p.x));
-    p.z = Math.max(-BOUNDARY, Math.min(BOUNDARY, p.z));
+    p.x = Math.max(-BOUNDARY_X, Math.min(BOUNDARY_X, p.x));
+    p.z = Math.max(-BOUNDARY_Z, Math.min(BOUNDARY_Z, p.z));
   }
 }

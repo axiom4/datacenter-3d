@@ -1,6 +1,7 @@
 // ─── Scene Dimensions ──────────────────────────────────────────────────────
-export const ROOM_SIZE = 20;
-export const WALL_HEIGHT = 4;
+export const ROOM_WIDTH = 14; // m — X axis, pareti laterali alla porta
+export const ROOM_DEPTH = 12; // m — Z axis, profondità (lato porta)
+export const WALL_HEIGHT = 4; // m
 export const TILE_SIZE = 0.6; // 600mm raised-floor tile
 
 // ─── Door ──────────────────────────────────────────────────────────────────

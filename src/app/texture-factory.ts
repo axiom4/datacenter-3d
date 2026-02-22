@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { ROOM_SIZE, TILE_SIZE } from './constants';
+import { ROOM_WIDTH, ROOM_DEPTH, TILE_SIZE } from './constants';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
@@ -37,8 +37,7 @@ export function createFloorTexture(maxAnisotropy = 1): THREE.CanvasTexture {
     ctx.fillStyle = Math.random() > 0.5 ? '#333333' : '#1a1a1a';
     ctx.fillRect(Math.random() * 512, Math.random() * 512, Math.random() * 2, Math.random() * 2);
   }
-  const factor = ROOM_SIZE / TILE_SIZE;
-  return repeating(canvas, factor, factor, maxAnisotropy);
+  return repeating(canvas, ROOM_WIDTH / TILE_SIZE, ROOM_DEPTH / TILE_SIZE, maxAnisotropy);
 }
 
 export function createCeilingTexture(): THREE.CanvasTexture {
@@ -60,7 +59,7 @@ export function createCeilingTexture(): THREE.CanvasTexture {
     ctx.fillStyle = Math.random() > 0.5 ? '#999999' : '#eeeeee';
     ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
   }
-  return repeating(canvas, ROOM_SIZE / 4, ROOM_SIZE / 4);
+  return repeating(canvas, ROOM_WIDTH / 4, ROOM_DEPTH / 4);
 }
 
 export function createWallTexture(): THREE.CanvasTexture {
@@ -75,7 +74,7 @@ export function createWallTexture(): THREE.CanvasTexture {
   for (let i = 0; i < 20; i++) {
     ctx.fillRect(Math.random() * 512, 0, 50, 512);
   }
-  return repeating(canvas, ROOM_SIZE / 4, 1);
+  return repeating(canvas, ROOM_WIDTH / 4, 1);
 }
 
 // ─── Door Textures ─────────────────────────────────────────────────────────

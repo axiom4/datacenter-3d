@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { ROOM_SIZE, WALL_HEIGHT } from './constants';
+import { ROOM_WIDTH, ROOM_DEPTH, WALL_HEIGHT } from './constants';
 
 // ─── Shared lamp geometries/materials (created once for all fixtures) ───────
 const housingGeo = new THREE.BoxGeometry(0.5, 0.1, 2.6);
@@ -33,10 +33,10 @@ export function setupLighting(scene: THREE.Scene): void {
   shadowLight.shadow.mapSize.height = 1024;
   shadowLight.shadow.camera.near = 0.5;
   shadowLight.shadow.camera.far = 50;
-  shadowLight.shadow.camera.left = -ROOM_SIZE / 2;
-  shadowLight.shadow.camera.right = ROOM_SIZE / 2;
-  shadowLight.shadow.camera.top = ROOM_SIZE / 2;
-  shadowLight.shadow.camera.bottom = -ROOM_SIZE / 2;
+  shadowLight.shadow.camera.left   = -ROOM_WIDTH / 2;
+  shadowLight.shadow.camera.right  =  ROOM_WIDTH / 2;
+  shadowLight.shadow.camera.top    =  ROOM_DEPTH / 2;
+  shadowLight.shadow.camera.bottom = -ROOM_DEPTH / 2;
   shadowLight.shadow.bias = -0.0005;
   shadowLight.shadow.radius = 4;
   scene.add(shadowLight, shadowLight.target);
@@ -49,7 +49,7 @@ export function setupLighting(scene: THREE.Scene): void {
   }
 
   // Single centre row of blue ceiling lights
-  for (let cz = -8; cz <= 8; cz += 4) {
+  for (let cz = -4; cz <= 4; cz += 4) {
     const light = new THREE.PointLight(0x2255ff, 40.0, 16, 1.5);
     light.position.set(0, WALL_HEIGHT - 0.1, cz);
     scene.add(light);
@@ -61,22 +61,19 @@ export function setupLighting(scene: THREE.Scene): void {
 // ─── Internal ────────────────────────────────────────────────────────────────
 
 function addOverheadFixtures(scene: THREE.Scene): void {
-  for (const xPos of [-3, 0, 3]) {
-    for (let z = -9; z <= 9; z += 3) {
+  for (const xPos of [-6, -3, 0, 3, 6]) {
+    for (let z = -3; z <= 3; z += 3) {
       scene.add(buildLampGroup(xPos, z));
 
-      // SpotLight every 6 m — halves fragment-shader light cost while keeping full coverage
-      if (Math.abs(z % 6) < 0.01 || Math.abs((z % 6) - 6) < 0.01) {
-        const spot = new THREE.SpotLight(0xfff4e0, 5.6);
-        spot.position.set(xPos, 3.7, z);
-        spot.target.position.set(xPos, 0, z);
-        spot.angle = Math.PI / 4.0;
-        spot.penumbra = 0.65;
-        spot.decay = 0.0;
-        spot.distance = 20.0;
-        spot.castShadow = false;
-        scene.add(spot, spot.target);
-      }
+      const spot = new THREE.SpotLight(0xfff4e0, 5.6);
+      spot.position.set(xPos, 3.7, z);
+      spot.target.position.set(xPos, 0, z);
+      spot.angle = Math.PI / 4.0;
+      spot.penumbra = 0.65;
+      spot.decay = 0.0;
+      spot.distance = 14.0;
+      spot.castShadow = false;
+      scene.add(spot, spot.target);
     }
   }
 }

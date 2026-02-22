@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {
-  ROOM_SIZE,
+  ROOM_WIDTH,
+  ROOM_DEPTH,
   WALL_HEIGHT,
   DOOR_FRAME_W,
   DOOR_FRAME_H,
@@ -28,7 +29,7 @@ export function buildRoom(scene: THREE.Scene, maxAnisotropy: number): void {
 
 function buildFloor(scene: THREE.Scene, maxAnisotropy: number): void {
   const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(ROOM_SIZE, ROOM_SIZE),
+    new THREE.PlaneGeometry(ROOM_WIDTH, ROOM_DEPTH),
     new THREE.MeshStandardMaterial({
       map: createFloorTexture(maxAnisotropy),
       roughness: 0.35,
@@ -46,7 +47,7 @@ function buildFloor(scene: THREE.Scene, maxAnisotropy: number): void {
 
 function buildCeiling(scene: THREE.Scene): void {
   const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(ROOM_SIZE, ROOM_SIZE),
+    new THREE.PlaneGeometry(ROOM_WIDTH, ROOM_DEPTH),
     new THREE.MeshStandardMaterial({
       map: createCeilingTexture(),
       color: 0xaaaaaa,
@@ -64,7 +65,6 @@ function buildCeiling(scene: THREE.Scene): void {
 // ─── Walls ───────────────────────────────────────────────────────────────────
 
 function buildWalls(scene: THREE.Scene): void {
-  const wallGeo = new THREE.PlaneGeometry(ROOM_SIZE, WALL_HEIGHT);
   const wallMat = new THREE.MeshStandardMaterial({
     map: createWallTexture(),
     roughness: 0.85,
@@ -73,15 +73,20 @@ function buildWalls(scene: THREE.Scene): void {
     side: THREE.FrontSide,
   });
 
-  const configs: { pos: [number, number, number]; rot: number }[] = [
-    { pos: [0, WALL_HEIGHT / 2, -ROOM_SIZE / 2], rot: 0 }, // back
-    { pos: [0, WALL_HEIGHT / 2, ROOM_SIZE / 2], rot: Math.PI }, // front
-    { pos: [-ROOM_SIZE / 2, WALL_HEIGHT / 2, 0], rot: Math.PI / 2 }, // left
-    { pos: [ROOM_SIZE / 2, WALL_HEIGHT / 2, 0], rot: -Math.PI / 2 }, // right
+  // Back/front walls span ROOM_WIDTH (X axis)
+  const wideGeo = new THREE.PlaneGeometry(ROOM_WIDTH, WALL_HEIGHT);
+  // Left/right walls span ROOM_DEPTH (Z axis)
+  const deepGeo = new THREE.PlaneGeometry(ROOM_DEPTH, WALL_HEIGHT);
+
+  const configs: { pos: [number, number, number]; rot: number; geo: THREE.PlaneGeometry }[] = [
+    { pos: [0, WALL_HEIGHT / 2, -ROOM_DEPTH / 2], rot: 0,            geo: wideGeo }, // back
+    { pos: [0, WALL_HEIGHT / 2,  ROOM_DEPTH / 2], rot: Math.PI,      geo: wideGeo }, // front
+    { pos: [-ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: Math.PI / 2,  geo: deepGeo }, // left
+    { pos: [ ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: -Math.PI / 2, geo: deepGeo }, // right
   ];
 
-  for (const { pos, rot } of configs) {
-    const wall = new THREE.Mesh(wallGeo, wallMat);
+  for (const { pos, rot, geo } of configs) {
+    const wall = new THREE.Mesh(geo, wallMat);
     wall.position.set(...pos);
     wall.rotation.y = rot;
     wall.receiveShadow = true;
@@ -93,7 +98,7 @@ function buildWalls(scene: THREE.Scene): void {
 
 function buildDoor(scene: THREE.Scene): void {
   const group = new THREE.Group();
-  group.position.set(0, 0, -ROOM_SIZE / 2 + 0.11);
+  group.position.set(0, 0, -ROOM_DEPTH / 2 + 0.11);
 
   // Frame (single box)
   const frame = new THREE.Mesh(

@@ -91,7 +91,7 @@ export class App implements AfterViewInit {
       0.1,
       1000,
     );
-    this.camera.position.set(0, 1.7, 6);
+    this.camera.position.set(0, 1.7, 4);
   }
 
   private setupRenderer(): void {
@@ -101,7 +101,7 @@ export class App implements AfterViewInit {
       powerPreference: 'high-performance',
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 0.75));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
