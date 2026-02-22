@@ -12,7 +12,6 @@ import {
   createCeilingTexture,
   createWallTexture,
   createBrushedMetalTexture,
-  createHazardStripeTexture,
   createExitSignTexture,
 } from './texture-factory';
 
@@ -96,20 +95,55 @@ function buildDoor(scene: THREE.Scene): void {
   const group = new THREE.Group();
   group.position.set(0, 0, -ROOM_SIZE / 2 + 0.11);
 
-  // Frame
+  // Frame (single box)
   const frame = new THREE.Mesh(
     new THREE.BoxGeometry(DOOR_FRAME_W, DOOR_FRAME_H, DOOR_FRAME_D),
     new THREE.MeshStandardMaterial({ color: COLOR_DARK_GREY, side: THREE.FrontSide }),
   );
   frame.position.y = DOOR_FRAME_H / 2;
-  frame.castShadow = frame.receiveShadow = true;
+  frame.receiveShadow = true;
   group.add(frame);
 
-  // Leaf group (offset so leaf front clears frame front)
-  const leafGroup = new THREE.Group();
-  leafGroup.position.z = 0.08;
-  group.add(leafGroup);
-  buildDoorLeaf(leafGroup);
+  // Leaf – single slab with brushed metal
+  const leafW = DOOR_FRAME_W - 0.2;
+  const leafH = DOOR_FRAME_H - 0.2;
+  const leafD = 0.08;
+  const leaf = new THREE.Mesh(
+    new THREE.BoxGeometry(leafW, leafH, leafD),
+    new THREE.MeshStandardMaterial({
+      map: createBrushedMetalTexture(),
+      metalness: 0.6,
+      roughness: 0.4,
+    }),
+  );
+  leaf.position.set(0, leafH / 2, 0.09);
+  leaf.castShadow = true;
+  leaf.receiveShadow = true;
+  group.add(leaf);
+
+  // Window pane (cheap standard material instead of MeshPhysical)
+  const winW = leafW * 0.55;
+  const winH = leafH * 0.4;
+  const pane = new THREE.Mesh(
+    new THREE.PlaneGeometry(winW, winH),
+    new THREE.MeshStandardMaterial({
+      color: 0x88ccff,
+      roughness: 0.05,
+      metalness: 0.1,
+      transparent: true,
+      opacity: 0.35,
+    }),
+  );
+  pane.position.set(0, leafH * 0.62, 0.135);
+  group.add(pane);
+
+  // Handle – single box
+  const handle = new THREE.Mesh(
+    new THREE.BoxGeometry(0.04, 0.12, 0.04),
+    new THREE.MeshStandardMaterial({ color: 0xbbbbbb, metalness: 0.8, roughness: 0.2 }),
+  );
+  handle.position.set(leafW / 2 - 0.12, leafH * 0.42, 0.14);
+  group.add(handle);
 
   // EXIT sign
   const signTex = createExitSignTexture();
@@ -126,113 +160,4 @@ function buildDoor(scene: THREE.Scene): void {
   group.add(sign);
 
   scene.add(group);
-}
-
-function buildDoorLeaf(parent: THREE.Group): void {
-  const leafW = DOOR_FRAME_W - 0.2;
-  const leafH = DOOR_FRAME_H - 0.2;
-  const leafD = 0.1;
-  const botH = 0.9;
-  const topH = 0.4;
-  const midH = leafH - botH - topH;
-  const sideW = 0.2;
-
-  const doorMat = new THREE.MeshStandardMaterial({
-    map: createBrushedMetalTexture(),
-    color: 0xffffff,
-    metalness: 0.6,
-    roughness: 0.4,
-  });
-
-  for (const cfg of [
-    { w: leafW, h: botH, y: botH / 2, x: 0 },
-    { w: leafW, h: topH, y: leafH - topH / 2, x: 0 },
-    { w: sideW, h: midH, y: botH + midH / 2, x: -(leafW / 2 - sideW / 2) },
-    { w: sideW, h: midH, y: botH + midH / 2, x: leafW / 2 - sideW / 2 },
-  ]) {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(cfg.w, cfg.h, leafD), doorMat);
-    m.position.set(cfg.x, cfg.y, 0);
-    m.castShadow = m.receiveShadow = true;
-    parent.add(m);
-  }
-
-  // Window pane
-  const winW = leafW - sideW * 2;
-  const pane = new THREE.Mesh(
-    new THREE.BoxGeometry(winW, midH, 0.02),
-    new THREE.MeshPhysicalMaterial({
-      color: 0x88ccff,
-      roughness: 0,
-      transparent: true,
-      opacity: 0.3,
-      transmission: 0.9,
-      thickness: 0.02,
-    }),
-  );
-  pane.position.set(0, botH + midH / 2, 0);
-  parent.add(pane);
-
-  // Vertical bars
-  const barMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
-  for (const dir of [-1, 1]) {
-    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, midH), barMat);
-    bar.position.set((dir * winW) / 6, botH + midH / 2, 0);
-    parent.add(bar);
-  }
-
-  // Kickplate
-  const kick = new THREE.Mesh(
-    new THREE.BoxGeometry(leafW - 0.04, 0.2, leafD + 0.01),
-    new THREE.MeshStandardMaterial({
-      map: createHazardStripeTexture(),
-      roughness: 0.8,
-      color: 0xffffff,
-    }),
-  );
-  kick.position.set(0, 0.15, 0);
-  parent.add(kick);
-
-  buildDoorHardware(parent, leafW, leafD);
-}
-
-function buildDoorHardware(parent: THREE.Group, leafW: number, leafD: number): void {
-  // Handle
-  const handleGroup = new THREE.Group();
-  handleGroup.position.set(leafW / 2 - 0.15, 1.0, leafD / 2);
-  handleGroup.add(
-    new THREE.Mesh(
-      new THREE.BoxGeometry(0.06, 0.15, 0.01),
-      new THREE.MeshStandardMaterial({ color: 0x222222 }),
-    ),
-  );
-  const bar = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.015, 0.015, 0.12),
-    new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.8, roughness: 0.2 }),
-  );
-  bar.rotation.z = Math.PI / 2;
-  bar.position.set(0, 0, 0.06);
-  handleGroup.add(bar);
-  parent.add(handleGroup);
-
-  // Keypad
-  const keypadGroup = new THREE.Group();
-  keypadGroup.position.set(leafW / 2 - 0.15, 1.25, leafD / 2);
-  keypadGroup.add(
-    new THREE.Mesh(
-      new THREE.BoxGeometry(0.08, 0.12, 0.02),
-      new THREE.MeshStandardMaterial({ color: 0x111111 }),
-    ),
-  );
-  const screen = new THREE.Mesh(
-    new THREE.BoxGeometry(0.06, 0.03, 0.025),
-    new THREE.MeshBasicMaterial({ color: 0x003300 }),
-  );
-  screen.position.set(0, 0.025, 0);
-  const statusLed = new THREE.Mesh(
-    new THREE.BoxGeometry(0.01, 0.01, 0.03),
-    new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
-  );
-  statusLed.position.set(0.025, 0.025, 0);
-  keypadGroup.add(screen, statusLed);
-  parent.add(keypadGroup);
 }
