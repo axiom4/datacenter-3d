@@ -79,10 +79,10 @@ function buildWalls(scene: THREE.Scene): void {
   const deepGeo = new THREE.PlaneGeometry(ROOM_DEPTH, WALL_HEIGHT);
 
   const configs: { pos: [number, number, number]; rot: number; geo: THREE.PlaneGeometry }[] = [
-    { pos: [0, WALL_HEIGHT / 2, -ROOM_DEPTH / 2], rot: 0,            geo: wideGeo }, // back
-    { pos: [0, WALL_HEIGHT / 2,  ROOM_DEPTH / 2], rot: Math.PI,      geo: wideGeo }, // front
-    { pos: [-ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: Math.PI / 2,  geo: deepGeo }, // left
-    { pos: [ ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: -Math.PI / 2, geo: deepGeo }, // right
+    { pos: [0, WALL_HEIGHT / 2, -ROOM_DEPTH / 2], rot: 0, geo: wideGeo }, // back
+    { pos: [0, WALL_HEIGHT / 2, ROOM_DEPTH / 2], rot: Math.PI, geo: wideGeo }, // front
+    { pos: [-ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: Math.PI / 2, geo: deepGeo }, // left
+    { pos: [ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: -Math.PI / 2, geo: deepGeo }, // right
   ];
 
   for (const { pos, rot, geo } of configs) {

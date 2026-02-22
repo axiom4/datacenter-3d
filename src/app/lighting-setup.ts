@@ -33,9 +33,9 @@ export function setupLighting(scene: THREE.Scene): void {
   shadowLight.shadow.mapSize.height = 1024;
   shadowLight.shadow.camera.near = 0.5;
   shadowLight.shadow.camera.far = 50;
-  shadowLight.shadow.camera.left   = -ROOM_WIDTH / 2;
-  shadowLight.shadow.camera.right  =  ROOM_WIDTH / 2;
-  shadowLight.shadow.camera.top    =  ROOM_DEPTH / 2;
+  shadowLight.shadow.camera.left = -ROOM_WIDTH / 2;
+  shadowLight.shadow.camera.right = ROOM_WIDTH / 2;
+  shadowLight.shadow.camera.top = ROOM_DEPTH / 2;
   shadowLight.shadow.camera.bottom = -ROOM_DEPTH / 2;
   shadowLight.shadow.bias = -0.0005;
   shadowLight.shadow.radius = 4;
