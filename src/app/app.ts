@@ -68,7 +68,7 @@ export class App implements AfterViewInit {
   private initScene(): void {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(COLOR_DARK_GREY);
-    this.scene.fog = new THREE.FogExp2(COLOR_DARK_GREY, 0.01);
+    this.scene.fog = new THREE.FogExp2(COLOR_DARK_GREY, 0.05);
 
     this.setupCamera();
     this.setupRenderer();
