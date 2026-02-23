@@ -16,11 +16,11 @@ const cableMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function setupLighting(scene: THREE.Scene): void {
-  // Ambient — cool-blue datacenter tint
-  scene.add(new THREE.AmbientLight(0x334466, 1.5));
+  // Ambient — very low, let spotlights define the space
+  scene.add(new THREE.AmbientLight(0x1a2233, 0.5));
 
-  // Hemisphere — sky/ground gradient
-  const hemi = new THREE.HemisphereLight(0x1a2a4a, 0x080808, 10.8);
+  // Hemisphere — subtle sky/ground gradient
+  const hemi = new THREE.HemisphereLight(0x1a2a4a, 0x030303, 2.5);
   hemi.position.set(0, WALL_HEIGHT, 0);
   scene.add(hemi);
 
@@ -41,18 +41,27 @@ export function setupLighting(scene: THREE.Scene): void {
   shadowLight.shadow.radius = 4;
   scene.add(shadowLight, shadowLight.target);
 
-  // Subtle blue glow from each rack row
+  // Blue glow from each rack row
   for (const rx of [-4.55, -1.45, 1.45, 4.55]) {
-    const glow = new THREE.PointLight(0x0044cc, 0.4, 6, 2);
-    glow.position.set(rx, 1.2, 0);
+    const glow = new THREE.PointLight(0x0055ff, 0.8, 5, 1.8);
+    glow.position.set(rx, 1.0, 0);
     scene.add(glow);
   }
 
-  // Single centre row of blue ceiling lights
-  for (let cz = -4; cz <= 4; cz += 4) {
-    const light = new THREE.PointLight(0x2255ff, 40.0, 16, 1.5);
-    light.position.set(0, WALL_HEIGHT - 0.1, cz);
-    scene.add(light);
+  // Blue ceiling accent — one per lamp fixture
+  for (const cx of [-6, -3, 0, 3, 6]) {
+    for (const cz of [-3, 0, 3]) {
+      const light = new THREE.PointLight(0x2255ff, 8.0, 12, 1.8);
+      light.position.set(cx, WALL_HEIGHT - 0.15, cz);
+      scene.add(light);
+    }
+  }
+
+  // Red emergency lights near door — one per corridor
+  for (const ex of [-3, 0, 3]) {
+    const emergency = new THREE.PointLight(0xff1500, 3.5, 6, 2);
+    emergency.position.set(ex, 2.8, -ROOM_DEPTH / 2 + 1.5);
+    scene.add(emergency);
   }
 
   addOverheadFixtures(scene);
@@ -65,13 +74,13 @@ function addOverheadFixtures(scene: THREE.Scene): void {
     for (let z = -3; z <= 3; z += 3) {
       scene.add(buildLampGroup(xPos, z));
 
-      const spot = new THREE.SpotLight(0xfff4e0, 5.6);
+      const spot = new THREE.SpotLight(0xffe8c0, 7.0);
       spot.position.set(xPos, 3.7, z);
       spot.target.position.set(xPos, 0, z);
-      spot.angle = Math.PI / 4.0;
-      spot.penumbra = 0.65;
-      spot.decay = 0.0;
-      spot.distance = 14.0;
+      spot.angle = Math.PI / 4.5;
+      spot.penumbra = 0.8;
+      spot.decay = 1.2;
+      spot.distance = 12.0;
       spot.castShadow = false;
       scene.add(spot, spot.target);
     }

@@ -2,7 +2,6 @@ import { Component, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } fr
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-import { COLOR_DARK_GREY } from './constants';
 import { setupLighting } from './lighting-setup';
 import { buildRoom } from './room-builder';
 import { DatacenterBuilder } from './datacenter-builder';
@@ -67,8 +66,8 @@ export class App implements AfterViewInit {
 
   private initScene(): void {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(COLOR_DARK_GREY);
-    this.scene.fog = new THREE.FogExp2(COLOR_DARK_GREY, 0.05);
+    this.scene.background = new THREE.Color(0x08090f);
+    this.scene.fog = new THREE.FogExp2(0x08090f, 0.07);
 
     this.setupCamera();
     this.setupRenderer();
@@ -101,11 +100,11 @@ export class App implements AfterViewInit {
       powerPreference: 'high-performance',
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 0.75));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 0.65));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.1;
+    this.renderer.toneMappingExposure = 0.875;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
   }
 
