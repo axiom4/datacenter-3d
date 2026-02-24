@@ -27,7 +27,9 @@ export class SoundFX {
   }
 
   /** Call once on the first user interaction to unblock autoplay policy. */
-  static unlock(): void { SoundFX.getCtx(); }
+  static unlock(): void {
+    SoundFX.getCtx();
+  }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -50,39 +52,45 @@ export class SoundFX {
 
     // Sub-bass thud
     const osc = ctx.createOscillator();
-    const og  = ctx.createGain();
+    const og = ctx.createGain();
     osc.type = 'sine';
     osc.frequency.setValueAtTime(220, t);
     osc.frequency.exponentialRampToValueAtTime(38, t + 0.22);
     og.gain.setValueAtTime(2.4, t);
     og.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
-    osc.connect(og); og.connect(out);
-    osc.start(t); osc.stop(t + 0.28);
+    osc.connect(og);
+    og.connect(out);
+    osc.start(t);
+    osc.stop(t + 0.28);
 
     // Crack burst
-    const ns  = ctx.createBufferSource();
+    const ns = ctx.createBufferSource();
     ns.buffer = SoundFX.noiseBuffer(ctx, 0.14);
-    const bp  = ctx.createBiquadFilter();
-    bp.type   = 'bandpass';
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
     bp.frequency.setValueAtTime(2400, t);
-    bp.frequency.exponentialRampToValueAtTime(700, t + 0.10);
+    bp.frequency.exponentialRampToValueAtTime(700, t + 0.1);
     bp.Q.value = 0.8;
-    const ng  = ctx.createGain();
+    const ng = ctx.createGain();
     ng.gain.setValueAtTime(2.8, t);
     ng.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-    ns.connect(bp); bp.connect(ng); ng.connect(out);
+    ns.connect(bp);
+    bp.connect(ng);
+    ng.connect(out);
     ns.start(t);
 
     // High-freq snap
     const snap = ctx.createBufferSource();
     snap.buffer = SoundFX.noiseBuffer(ctx, 0.03);
-    const hp    = ctx.createBiquadFilter();
-    hp.type     = 'highpass';
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
     hp.frequency.value = 5000;
-    const sg    = ctx.createGain();
+    const sg = ctx.createGain();
     sg.gain.setValueAtTime(1.2, t);
     sg.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-    snap.connect(hp); hp.connect(sg); sg.connect(out);
+    snap.connect(hp);
+    hp.connect(sg);
+    sg.connect(out);
     snap.start(t);
   }
 
@@ -94,27 +102,31 @@ export class SoundFX {
 
     // Body
     const osc = ctx.createOscillator();
-    const og  = ctx.createGain();
+    const og = ctx.createGain();
     osc.type = 'sine';
     osc.frequency.setValueAtTime(280, t);
     osc.frequency.exponentialRampToValueAtTime(50, t + 0.14);
     og.gain.setValueAtTime(1.6, t);
     og.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-    osc.connect(og); og.connect(out);
-    osc.start(t); osc.stop(t + 0.18);
+    osc.connect(og);
+    og.connect(out);
+    osc.start(t);
+    osc.stop(t + 0.18);
 
     // Crack
-    const ns  = ctx.createBufferSource();
+    const ns = ctx.createBufferSource();
     ns.buffer = SoundFX.noiseBuffer(ctx, 0.09);
-    const bp  = ctx.createBiquadFilter();
-    bp.type   = 'bandpass';
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
     bp.frequency.setValueAtTime(3200, t);
     bp.frequency.exponentialRampToValueAtTime(1100, t + 0.06);
     bp.Q.value = 1.1;
-    const ng  = ctx.createGain();
+    const ng = ctx.createGain();
     ng.gain.setValueAtTime(2.0, t);
     ng.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-    ns.connect(bp); bp.connect(ng); ng.connect(out);
+    ns.connect(bp);
+    bp.connect(ng);
+    ng.connect(out);
     ns.start(t);
   }
 
@@ -124,7 +136,7 @@ export class SoundFX {
     const out = SoundFX.out;
     const t = ctx.currentTime;
 
-    const ns  = ctx.createBufferSource();
+    const ns = ctx.createBufferSource();
     ns.buffer = SoundFX.noiseBuffer(ctx, 0.18);
 
     const hp = ctx.createBiquadFilter();
@@ -138,7 +150,9 @@ export class SoundFX {
     gain.gain.linearRampToValueAtTime(1.3, t + 0.025);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
 
-    ns.connect(hp); hp.connect(gain); gain.connect(out);
+    ns.connect(hp);
+    hp.connect(gain);
+    gain.connect(out);
     ns.start(t);
   }
 
@@ -151,25 +165,29 @@ export class SoundFX {
     // Low thud oscillator
     const osc = ctx.createOscillator();
     osc.type = 'sine';
-    const og  = ctx.createGain();
+    const og = ctx.createGain();
     osc.frequency.setValueAtTime(160, t);
-    osc.frequency.exponentialRampToValueAtTime(50, t + 0.10);
+    osc.frequency.exponentialRampToValueAtTime(50, t + 0.1);
     og.gain.setValueAtTime(1.8, t);
     og.gain.exponentialRampToValueAtTime(0.001, t + 0.13);
-    osc.connect(og); og.connect(out);
-    osc.start(t); osc.stop(t + 0.13);
+    osc.connect(og);
+    og.connect(out);
+    osc.start(t);
+    osc.stop(t + 0.13);
 
     // Snap transient
-    const ns  = ctx.createBufferSource();
+    const ns = ctx.createBufferSource();
     ns.buffer = SoundFX.noiseBuffer(ctx, 0.045);
-    const bp  = ctx.createBiquadFilter();
-    bp.type   = 'bandpass';
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
     bp.frequency.value = 1000;
     bp.Q.value = 0.6;
-    const ng  = ctx.createGain();
+    const ng = ctx.createGain();
     ng.gain.setValueAtTime(1.1, t);
     ng.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
-    ns.connect(bp); bp.connect(ng); ng.connect(out);
+    ns.connect(bp);
+    bp.connect(ng);
+    ng.connect(out);
     ns.start(t);
   }
 
@@ -185,21 +203,25 @@ export class SoundFX {
     osc.frequency.setValueAtTime(700, t);
     osc.frequency.exponentialRampToValueAtTime(260, t + 0.045);
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.30, t);
+    gain.gain.setValueAtTime(0.3, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
-    osc.connect(gain); gain.connect(out);
-    osc.start(t); osc.stop(t + 0.055);
+    osc.connect(gain);
+    gain.connect(out);
+    osc.start(t);
+    osc.stop(t + 0.055);
 
     // Noise tock
-    const ns  = ctx.createBufferSource();
+    const ns = ctx.createBufferSource();
     ns.buffer = SoundFX.noiseBuffer(ctx, 0.03);
-    const lp  = ctx.createBiquadFilter();
-    lp.type   = 'lowpass';
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
     lp.frequency.value = 1800;
-    const ng  = ctx.createGain();
-    ng.gain.setValueAtTime(0.20, t);
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(0.2, t);
     ng.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-    ns.connect(lp); lp.connect(ng); ng.connect(out);
+    ns.connect(lp);
+    lp.connect(ng);
+    ng.connect(out);
     ns.start(t);
   }
 
@@ -209,18 +231,20 @@ export class SoundFX {
     const out = SoundFX.out;
     const t = ctx.currentTime;
 
-    const ns  = ctx.createBufferSource();
+    const ns = ctx.createBufferSource();
     ns.buffer = SoundFX.noiseBuffer(ctx, 0.065);
 
     const lp = ctx.createBiquadFilter();
-    lp.type  = 'lowpass';
+    lp.type = 'lowpass';
     lp.frequency.value = 320;
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.42, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.065);
 
-    ns.connect(lp); lp.connect(gain); gain.connect(out);
+    ns.connect(lp);
+    lp.connect(gain);
+    gain.connect(out);
     ns.start(t);
   }
 }

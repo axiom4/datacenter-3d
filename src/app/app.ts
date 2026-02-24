@@ -16,7 +16,10 @@ import { SoundFX } from './sound-fx';
     <div class="crosshair"></div>
     <div class="fps-counter">{{ fps }} FPS</div>
     <div class="weapon-name">{{ weaponName }}</div>
-    <div class="weapon-hint">[Click] Spara/Attacca &nbsp;|&nbsp; [Q] Cambia arma &nbsp;|&nbsp; [H] Nascondi arma &nbsp;|&nbsp; [F] Fullscreen</div>
+    <div class="weapon-hint">
+      [Click] Spara/Attacca &nbsp;|&nbsp; [Q] Cambia arma &nbsp;|&nbsp; [H] Nascondi arma
+      &nbsp;|&nbsp; [F] Fullscreen
+    </div>
   `,
   styles: [
     `
@@ -45,10 +48,12 @@ import { SoundFX } from './sound-fx';
         left: 50%;
         transform: translateX(-50%);
         color: #e8e0cc;
-        font: bold 13px/1 'Courier New', monospace;
+        font:
+          bold 13px/1 'Courier New',
+          monospace;
         text-transform: uppercase;
         letter-spacing: 3px;
-        background: rgba(0, 0, 0, 0.60);
+        background: rgba(0, 0, 0, 0.6);
         padding: 5px 16px;
         border-radius: 3px;
         pointer-events: none;
@@ -61,8 +66,10 @@ import { SoundFX } from './sound-fx';
         bottom: 14px;
         left: 50%;
         transform: translateX(-50%);
-        color: rgba(255,255,255,0.30);
-        font: 10px/1 'Courier New', monospace;
+        color: rgba(255, 255, 255, 0.3);
+        font:
+          10px/1 'Courier New',
+          monospace;
         letter-spacing: 1px;
         pointer-events: none;
         z-index: 100;
@@ -92,12 +99,12 @@ import { SoundFX } from './sound-fx';
         margin-top: -1px;
         background: linear-gradient(
           to right,
-          rgba(255,255,255,0.95) 0%,
-          rgba(255,255,255,0.95) calc(50% - 3px),
+          rgba(255, 255, 255, 0.95) 0%,
+          rgba(255, 255, 255, 0.95) calc(50% - 3px),
           transparent calc(50% - 3px),
           transparent calc(50% + 3px),
-          rgba(255,255,255,0.95) calc(50% + 3px),
-          rgba(255,255,255,0.95) 100%
+          rgba(255, 255, 255, 0.95) calc(50% + 3px),
+          rgba(255, 255, 255, 0.95) 100%
         );
       }
       /* vertical arms */
@@ -109,12 +116,12 @@ import { SoundFX } from './sound-fx';
         margin-left: -1px;
         background: linear-gradient(
           to bottom,
-          rgba(255,255,255,0.95) 0%,
-          rgba(255,255,255,0.95) calc(50% - 3px),
+          rgba(255, 255, 255, 0.95) 0%,
+          rgba(255, 255, 255, 0.95) calc(50% - 3px),
           transparent calc(50% - 3px),
           transparent calc(50% + 3px),
-          rgba(255,255,255,0.95) calc(50% + 3px),
-          rgba(255,255,255,0.95) 100%
+          rgba(255, 255, 255, 0.95) calc(50% + 3px),
+          rgba(255, 255, 255, 0.95) 100%
         );
       }
     `,

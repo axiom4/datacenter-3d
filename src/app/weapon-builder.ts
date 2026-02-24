@@ -31,17 +31,17 @@ export class WeaponBuilder {
     },
     {
       name: 'KA-BAR Combat',
-      restPos: new THREE.Vector3(0.14, -0.20, -0.34),
-      restRot: new THREE.Euler(0.08, 0.20, 0.05),
+      restPos: new THREE.Vector3(0.14, -0.2, -0.34),
+      restRot: new THREE.Euler(0.08, 0.2, 0.05),
     },
     {
-      name: '',   // mani nude — nessun nome HUD
-      restPos: new THREE.Vector3(0.00, -0.22, -0.34),
-      restRot: new THREE.Euler(0.10, 0.00, 0.00),
+      name: '', // mani nude — nessun nome HUD
+      restPos: new THREE.Vector3(0.0, -0.22, -0.34),
+      restRot: new THREE.Euler(0.1, 0.0, 0.0),
     },
   ];
 
-  private lastWeaponIndex = 0;   // ricorda l'arma attiva prima di nasconderla
+  private lastWeaponIndex = 0; // ricorda l'arma attiva prima di nasconderla
 
   // ── Attack animation state ──────────────────────────────────────────────
   private attacking = false;
@@ -55,21 +55,28 @@ export class WeaponBuilder {
 
   // ── Particle pools ────────────────────────────────────────────
   private readonly bullets: Array<{
-    mesh: THREE.Mesh; vel: THREE.Vector3; life: number; active: boolean;
+    mesh: THREE.Mesh;
+    vel: THREE.Vector3;
+    life: number;
+    active: boolean;
   }> = [];
   private readonly smokes: Array<{
-    mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; active: boolean;
+    mesh: THREE.Mesh;
+    vel: THREE.Vector3;
+    life: number;
+    maxLife: number;
+    active: boolean;
   }> = [];
 
   // Rest pose dei sub-gruppi mano (locali rispetto al gruppo armi全)
   private static readonly HAND_REST = [
-    { pos: new THREE.Vector3( 0.095, -0.015,  0.000), rot: new THREE.Euler(0.10,  0.10,  0.06) },  // right
-    { pos: new THREE.Vector3(-0.095, -0.020,  0.030), rot: new THREE.Euler(0.08, -0.10, -0.06) },  // left
+    { pos: new THREE.Vector3(0.095, -0.015, 0.0), rot: new THREE.Euler(0.1, 0.1, 0.06) }, // right
+    { pos: new THREE.Vector3(-0.095, -0.02, 0.03), rot: new THREE.Euler(0.08, -0.1, -0.06) }, // left
   ];
   // Peak pose del gancio — rot.y ampio per far spuntare il gomito ad arco
   private static readonly HAND_HOOK = [
-    { pos: new THREE.Vector3(-0.030, -0.005, -0.130), rot: new THREE.Euler(0.10,  0.85,  0.12) },  // right hook
-    { pos: new THREE.Vector3( 0.030, -0.010, -0.125), rot: new THREE.Euler(0.08, -0.85, -0.12) },  // left hook
+    { pos: new THREE.Vector3(-0.03, -0.005, -0.13), rot: new THREE.Euler(0.1, 0.85, 0.12) }, // right hook
+    { pos: new THREE.Vector3(0.03, -0.01, -0.125), rot: new THREE.Euler(0.08, -0.85, -0.12) }, // left hook
   ];
 
   get weaponName(): string {
@@ -113,7 +120,7 @@ export class WeaponBuilder {
       this.spawnProjectileFX();
       // ── Sound ────────────────
       if (this.weaponIndex === 0) SoundFX.rifle();
-      else                        SoundFX.pistol();
+      else SoundFX.pistol();
     }
     // Knife
     if (this.weaponIndex === 2) SoundFX.slash();
@@ -172,13 +179,13 @@ export class WeaponBuilder {
     frontFill.position.set(0, 0.1, 1.5);
     this.scene.add(frontFill);
 
-    const rifle   = buildRifle();
-    const beretta  = buildBeretta();
-    const knife    = buildKnife();
-    const hands    = buildHands();
+    const rifle = buildRifle();
+    const beretta = buildBeretta();
+    const knife = buildKnife();
+    const hands = buildHands();
     beretta.visible = false;
-    knife.visible   = false;
-    hands.visible   = false;
+    knife.visible = false;
+    hands.visible = false;
     this.weapons = [rifle, beretta, knife, hands];
     this.scene.add(rifle);
     this.scene.add(beretta);
@@ -191,8 +198,12 @@ export class WeaponBuilder {
 
     // ── Muzzle flash spheres (attached to firearms) ────────────────────────
     const flashMat = new THREE.MeshStandardMaterial({
-      color: 0xffcc44, emissive: 0xffcc44, emissiveIntensity: 8,
-      transparent: true, opacity: 0, depthWrite: false,
+      color: 0xffcc44,
+      emissive: 0xffcc44,
+      emissiveIntensity: 8,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
     });
     [
       { idx: 0, pos: new THREE.Vector3(0, 0.01, -0.22) },
@@ -207,8 +218,11 @@ export class WeaponBuilder {
     const bulletGeo = new THREE.CylinderGeometry(0.002, 0.003, 0.022, 6);
     bulletGeo.rotateX(Math.PI / 2); // asse lungo Z
     const bulletMat = new THREE.MeshStandardMaterial({
-      color: 0xb87333, emissive: 0x7a3b00, emissiveIntensity: 1.2,
-      roughness: 0.25, metalness: 0.95,
+      color: 0xb87333,
+      emissive: 0x7a3b00,
+      emissiveIntensity: 1.2,
+      roughness: 0.25,
+      metalness: 0.95,
     });
     for (let i = 0; i < 8; i++) {
       const mesh = new THREE.Mesh(bulletGeo, bulletMat);
@@ -222,8 +236,12 @@ export class WeaponBuilder {
     for (let i = 0; i < 18; i++) {
       const mat = new THREE.MeshStandardMaterial({
         color: 0xddddcc,
-        emissive: 0x888866, emissiveIntensity: 0.4,
-        transparent: true, opacity: 0, depthWrite: false, side: THREE.FrontSide,
+        emissive: 0x888866,
+        emissiveIntensity: 0.4,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        side: THREE.FrontSide,
       });
       const mesh = new THREE.Mesh(smokeGeo, mat);
       mesh.visible = false;
@@ -256,12 +274,12 @@ export class WeaponBuilder {
     }
 
     const speed = isMoving ? 7.5 : 1.8;
-    const ampX  = isMoving ? 0.014 : 0.003;
-    const ampY  = isMoving ? 0.018 : 0.004;
+    const ampX = isMoving ? 0.014 : 0.003;
+    const ampY = isMoving ? 0.018 : 0.004;
 
     this.bobTime += delta * speed;
 
-    const cfg  = WeaponBuilder.CONFIGS[this.weaponIndex];
+    const cfg = WeaponBuilder.CONFIGS[this.weaponIndex];
     const bobX = Math.sin(this.bobTime) * ampX;
     const bobY = Math.abs(Math.sin(this.bobTime * 0.5)) * -ampY;
 
@@ -284,12 +302,10 @@ export class WeaponBuilder {
     flashMesh.getWorldPosition(muzzlePos);
 
     // Direzione: la camera armi guarda lungo -Z, proiettile va in quella direzione
-    const dir = new THREE.Vector3(0, 0, -1)
-      .applyQuaternion(this.camera.quaternion)
-      .normalize();
+    const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion).normalize();
 
     // — Proiettile —
-    const bullet = this.bullets.find(b => !b.active);
+    const bullet = this.bullets.find((b) => !b.active);
     if (bullet) {
       bullet.mesh.position.copy(muzzlePos);
       bullet.mesh.lookAt(muzzlePos.clone().add(dir));
@@ -309,15 +325,18 @@ export class WeaponBuilder {
       const spread = new THREE.Vector3(
         (Math.random() - 0.5) * 0.25,
         Math.random() * 0.15,
-        (Math.random() - 0.5) * 0.10,
+        (Math.random() - 0.5) * 0.1,
       );
-      s.vel.copy(dir).multiplyScalar(0.25 + Math.random() * 0.20).add(spread);
-      const ml = 0.30 + Math.random() * 0.25;
+      s.vel
+        .copy(dir)
+        .multiplyScalar(0.25 + Math.random() * 0.2)
+        .add(spread);
+      const ml = 0.3 + Math.random() * 0.25;
       s.life = ml;
       s.maxLife = ml;
       s.active = true;
       s.mesh.visible = true;
-      (s.mesh.material as THREE.MeshStandardMaterial).opacity = 0.55 + Math.random() * 0.20;
+      (s.mesh.material as THREE.MeshStandardMaterial).opacity = 0.55 + Math.random() * 0.2;
       spawned++;
     }
   }
@@ -337,7 +356,7 @@ export class WeaponBuilder {
       s.mesh.position.addScaledVector(s.vel, delta);
       // rallenta nel tempo
       s.vel.multiplyScalar(1 - delta * 3.5);
-      const ratio = s.life / s.maxLife;         // 1 -> 0
+      const ratio = s.life / s.maxLife; // 1 -> 0
       // scale cresce, opacity cala
       const sc = 0.5 + (1 - ratio) * 2.2;
       s.mesh.scale.setScalar(sc);
@@ -364,12 +383,14 @@ export class WeaponBuilder {
       this.muzzleFlashTime -= delta;
       const mesh = this.muzzleFlashMesh[this.weaponIndex];
       if (mesh) {
-        (mesh.material as THREE.MeshStandardMaterial).opacity =
-          Math.max(0, this.muzzleFlashTime / this.FLASH_DURATION);
+        (mesh.material as THREE.MeshStandardMaterial).opacity = Math.max(
+          0,
+          this.muzzleFlashTime / this.FLASH_DURATION,
+        );
       }
     }
 
-    const fwdDur = [0.05, 0.05, 0.10, 0.07][this.weaponIndex];
+    const fwdDur = [0.05, 0.05, 0.1, 0.07][this.weaponIndex];
     const bakDur = [0.12, 0.12, 0.15, 0.09][this.weaponIndex];
     const dur = this.attackPhase === 'forward' ? fwdDur : bakDur;
 
@@ -380,26 +401,43 @@ export class WeaponBuilder {
     if (this.attackPhase === 'forward') {
       const e = t * t; // ease-in
       switch (this.weaponIndex) {
-        case 0: case 1: // firearms — recoil kick up+back
+        case 0:
+        case 1: // firearms — recoil kick up+back
           w.position.set(cfg.restPos.x, cfg.restPos.y + e * 0.022, cfg.restPos.z + e * 0.06);
           w.rotation.set(cfg.restRot.x - e * 0.12, cfg.restRot.y, cfg.restRot.z);
           break;
         case 2: // knife — diagonal slash downward
           w.position.set(cfg.restPos.x, cfg.restPos.y - e * 0.06, cfg.restPos.z - e * 0.04);
-          w.rotation.set(cfg.restRot.x + e * 0.60, cfg.restRot.y, cfg.restRot.z - e * 0.15);
+          w.rotation.set(cfg.restRot.x + e * 0.6, cfg.restRot.y, cfg.restRot.z - e * 0.15);
           break;
       }
-      if (t >= 1) { this.attackPhase = 'back'; this.attackT = 0; }
+      if (t >= 1) {
+        this.attackPhase = 'back';
+        this.attackT = 0;
+      }
     } else {
       const e = 1 - (1 - t) * (1 - t); // ease-out back to rest
       switch (this.weaponIndex) {
-        case 0: case 1:
-          w.position.set(cfg.restPos.x, cfg.restPos.y + (1 - e) * 0.022, cfg.restPos.z + (1 - e) * 0.06);
+        case 0:
+        case 1:
+          w.position.set(
+            cfg.restPos.x,
+            cfg.restPos.y + (1 - e) * 0.022,
+            cfg.restPos.z + (1 - e) * 0.06,
+          );
           w.rotation.set(cfg.restRot.x - (1 - e) * 0.12, cfg.restRot.y, cfg.restRot.z);
           break;
         case 2:
-          w.position.set(cfg.restPos.x, cfg.restPos.y - (1 - e) * 0.06, cfg.restPos.z - (1 - e) * 0.04);
-          w.rotation.set(cfg.restRot.x + (1 - e) * 0.60, cfg.restRot.y, cfg.restRot.z - (1 - e) * 0.15);
+          w.position.set(
+            cfg.restPos.x,
+            cfg.restPos.y - (1 - e) * 0.06,
+            cfg.restPos.z - (1 - e) * 0.04,
+          );
+          w.rotation.set(
+            cfg.restRot.x + (1 - e) * 0.6,
+            cfg.restRot.y,
+            cfg.restRot.z - (1 - e) * 0.15,
+          );
           break;
       }
       if (t >= 1) {
@@ -413,12 +451,12 @@ export class WeaponBuilder {
 
   /** Animazione gancio pugile: muove solo il sub-gruppo mano che colpisce. */
   private updateHook(delta: number): void {
-    const idx  = this.hookStep as 0 | 1;
+    const idx = this.hookStep as 0 | 1;
     const hand = this.weapons[3].children[idx] as THREE.Group;
     const rest = WeaponBuilder.HAND_REST[idx];
     const peak = WeaponBuilder.HAND_HOOK[idx];
 
-    const fwdDur = 0.11;  // un po' più lento per vedere l'arco del gomito
+    const fwdDur = 0.11; // un po' più lento per vedere l'arco del gomito
     const bakDur = 0.14;
     const dur = this.attackPhase === 'forward' ? fwdDur : bakDur;
     this.attackT += delta;
@@ -434,7 +472,8 @@ export class WeaponBuilder {
         rest.rot.z + (peak.rot.z - rest.rot.z) * e,
       );
       if (t >= 1) {
-        this.attackPhase = 'back'; this.attackT = 0;
+        this.attackPhase = 'back';
+        this.attackT = 0;
         SoundFX.punch(); // suono di impatto al culmine del gancio
       }
     } else {
@@ -451,7 +490,7 @@ export class WeaponBuilder {
         hand.rotation.copy(rest.rot);
         // Apri il pugno e alterna al braccio opposto per il prossimo click
         HandsWeapon.setFist(this.weapons[3], idx, false);
-        this.hookStep = (this.hookStep === 0 ? 1 : 0);
+        this.hookStep = this.hookStep === 0 ? 1 : 0;
         this.attacking = false;
         this.bobTime = 0;
       }
@@ -480,7 +519,11 @@ export class WeaponBuilder {
         this.swapT = 0;
         // Start new weapon from below
         const nCfg = WeaponBuilder.CONFIGS[this.weaponIndex];
-        this.weapons[this.weaponIndex].position.set(nCfg.restPos.x, nCfg.restPos.y - 0.42, nCfg.restPos.z);
+        this.weapons[this.weaponIndex].position.set(
+          nCfg.restPos.x,
+          nCfg.restPos.y - 0.42,
+          nCfg.restPos.z,
+        );
         this.weapons[this.weaponIndex].rotation.copy(nCfg.restRot);
       }
     } else {
@@ -495,7 +538,7 @@ export class WeaponBuilder {
       if (t >= 1) {
         this.weapons[this.weaponIndex].position.set(cfg.restPos.x, cfg.restPos.y, cfg.restPos.z);
         this.swapping = false;
-        this.bobTime  = 0;
+        this.bobTime = 0;
       }
     }
   }
@@ -511,4 +554,3 @@ export class WeaponBuilder {
     this.weapons[index].rotation.copy(cfg.restRot);
   }
 }
-

@@ -18,8 +18,8 @@ const COLLISION_PADDING = 0.3;
 const RACK_HALF_W = (1.2 + COLLISION_PADDING * 2) / 2; // semi-estensione mondo-X = 0.9m
 
 // Rack ±0.4m lungo Z dal centro + padding.
-const RACK_Z_MIN = -4.10 - 0.4 - COLLISION_PADDING; // ≈ -4.80
-const RACK_Z_MAX =  3.28 + 0.4 + COLLISION_PADDING; // ≈ +3.98
+const RACK_Z_MIN = -4.1 - 0.4 - COLLISION_PADDING; // ≈ -4.80
+const RACK_Z_MAX = 3.28 + 0.4 + COLLISION_PADDING; // ≈ +3.98
 const BOUNDARY_X = ROOM_WIDTH / 2 - PLAYER_BOUNDARY_MARGIN;
 const BOUNDARY_Z = ROOM_DEPTH / 2 - PLAYER_BOUNDARY_MARGIN;
 

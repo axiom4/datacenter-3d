@@ -44,8 +44,8 @@ export class DatacenterBuilder {
 
   build(scene: THREE.Scene): void {
     const racksPerRow = 10;
-    const spacing = 0.82;                         // 800mm rack + 20mm gap
-    const aisleHalf = RACK_DEPTH / 2 + 0.60;     // 0.6m half-depth + 0.6m cold-aisle half
+    const spacing = 0.82; // 800mm rack + 20mm gap
+    const aisleHalf = RACK_DEPTH / 2 + 0.6; // 0.6m half-depth + 0.6m cold-aisle half
 
     for (const aisleX of [-3, 3]) {
       for (let i = 0; i < racksPerRow; i++) {

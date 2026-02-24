@@ -6,7 +6,6 @@ import { ROOM_WIDTH, ROOM_DEPTH, TILE_SIZE } from './constants';
  * All methods are static; instantiation is never needed.
  */
 export class TextureFactory {
-
   // ─── Private helpers ─────────────────────────────────────────────────────
 
   private static makeCanvas(w: number, h: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
@@ -43,7 +42,12 @@ export class TextureFactory {
       ctx.fillStyle = Math.random() > 0.5 ? '#333333' : '#1a1a1a';
       ctx.fillRect(Math.random() * 512, Math.random() * 512, Math.random() * 2, Math.random() * 2);
     }
-    return TextureFactory.repeating(canvas, ROOM_WIDTH / TILE_SIZE, ROOM_DEPTH / TILE_SIZE, maxAnisotropy);
+    return TextureFactory.repeating(
+      canvas,
+      ROOM_WIDTH / TILE_SIZE,
+      ROOM_DEPTH / TILE_SIZE,
+      maxAnisotropy,
+    );
   }
 
   static createCeilingTexture(): THREE.CanvasTexture {
@@ -208,13 +212,12 @@ export class TextureFactory {
 }
 
 // ─── Backward-compat named exports ───────────────────────────────────────────
-export const createFloorTexture        = (a?: number)    => TextureFactory.createFloorTexture(a);
-export const createCeilingTexture      = ()              => TextureFactory.createCeilingTexture();
-export const createWallTexture         = ()              => TextureFactory.createWallTexture();
-export const createBrushedMetalTexture = ()              => TextureFactory.createBrushedMetalTexture();
-export const createHazardStripeTexture = ()              => TextureFactory.createHazardStripeTexture();
-export const createExitSignTexture     = ()              => TextureFactory.createExitSignTexture();
-export const createServerFaceMaterial  = ()              => TextureFactory.createServerFaceMaterial();
-export const createServerRearMaterial  = ()              => TextureFactory.createServerRearMaterial();
-export const createRackFrameMaterial   = ()              => TextureFactory.createRackFrameMaterial();
-
+export const createFloorTexture = (a?: number) => TextureFactory.createFloorTexture(a);
+export const createCeilingTexture = () => TextureFactory.createCeilingTexture();
+export const createWallTexture = () => TextureFactory.createWallTexture();
+export const createBrushedMetalTexture = () => TextureFactory.createBrushedMetalTexture();
+export const createHazardStripeTexture = () => TextureFactory.createHazardStripeTexture();
+export const createExitSignTexture = () => TextureFactory.createExitSignTexture();
+export const createServerFaceMaterial = () => TextureFactory.createServerFaceMaterial();
+export const createServerRearMaterial = () => TextureFactory.createServerRearMaterial();
+export const createRackFrameMaterial = () => TextureFactory.createRackFrameMaterial();

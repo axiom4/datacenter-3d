@@ -21,7 +21,6 @@ import {
  * All build methods are static; call RoomBuilder.build(scene, maxAnisotropy).
  */
 export class RoomBuilder {
-
   static build(scene: THREE.Scene, maxAnisotropy: number): void {
     RoomBuilder.buildFloor(scene, maxAnisotropy);
     RoomBuilder.buildCeiling(scene);
@@ -83,10 +82,10 @@ export class RoomBuilder {
     const deepGeo = new THREE.PlaneGeometry(ROOM_DEPTH, WALL_HEIGHT);
 
     const configs: { pos: [number, number, number]; rot: number; geo: THREE.PlaneGeometry }[] = [
-      { pos: [0, WALL_HEIGHT / 2, -ROOM_DEPTH / 2], rot: 0,           geo: wideGeo }, // back
-      { pos: [0, WALL_HEIGHT / 2, ROOM_DEPTH / 2],  rot: Math.PI,     geo: wideGeo }, // front
+      { pos: [0, WALL_HEIGHT / 2, -ROOM_DEPTH / 2], rot: 0, geo: wideGeo }, // back
+      { pos: [0, WALL_HEIGHT / 2, ROOM_DEPTH / 2], rot: Math.PI, geo: wideGeo }, // front
       { pos: [-ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: Math.PI / 2, geo: deepGeo }, // left
-      { pos: [ROOM_WIDTH / 2,  WALL_HEIGHT / 2, 0], rot: -Math.PI / 2, geo: deepGeo }, // right
+      { pos: [ROOM_WIDTH / 2, WALL_HEIGHT / 2, 0], rot: -Math.PI / 2, geo: deepGeo }, // right
     ];
 
     for (const { pos, rot, geo } of configs) {
@@ -175,4 +174,3 @@ export class RoomBuilder {
 // ─── Backward-compat named export ────────────────────────────────────────────
 export const buildRoom = (scene: THREE.Scene, maxAnisotropy: number) =>
   RoomBuilder.build(scene, maxAnisotropy);
-

@@ -27,10 +27,10 @@ canvas.three-canvas {
   margin-top: -1px;
   background: linear-gradient(
     to right,
-    rgba(255, 255, 255, 0.90) 30%,
+    rgba(255, 255, 255, 0.9) 30%,
     transparent 30%,
     transparent 70%,
-    rgba(255, 255, 255, 0.90) 70%
+    rgba(255, 255, 255, 0.9) 70%
   );
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
@@ -46,10 +46,10 @@ canvas.three-canvas {
   margin-left: -1px;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.90) 30%,
+    rgba(255, 255, 255, 0.9) 30%,
     transparent 30%,
     transparent 70%,
-    rgba(255, 255, 255, 0.90) 70%
+    rgba(255, 255, 255, 0.9) 70%
   );
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }

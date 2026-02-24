@@ -10,7 +10,6 @@ import * as THREE from 'three';
  * All generator methods are static; module-level exports below hold the shared singletons.
  */
 export class WeaponTextures {
-
   // ─── Helpers ──────────────────────────────────────────────────────────────────
 
   static hexToRgb(hex: string): [number, number, number] {
@@ -18,10 +17,7 @@ export class WeaponTextures {
     return [(n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff];
   }
 
-  static makeNormalFromCanvas(
-    tex: THREE.CanvasTexture,
-    strength = 1.5,
-  ): THREE.CanvasTexture {
+  static makeNormalFromCanvas(tex: THREE.CanvasTexture, strength = 1.5): THREE.CanvasTexture {
     const src = tex.image as HTMLCanvasElement;
     const w = src.width;
     const h = src.height;
@@ -48,7 +44,7 @@ export class WeaponTextures {
         const ny = (d - u) * strength;
         const nz = 1.0;
         const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
-        out.data[i]     = Math.floor(((nx / len) * 0.5 + 0.5) * 255);
+        out.data[i] = Math.floor(((nx / len) * 0.5 + 0.5) * 255);
         out.data[i + 1] = Math.floor(((ny / len) * 0.5 + 0.5) * 255);
         out.data[i + 2] = Math.floor(((nz / len) * 0.5 + 0.5) * 255);
         out.data[i + 3] = 255;
@@ -179,9 +175,7 @@ export class WeaponTextures {
       const y2 = y0 + (Math.random() - 0.5) * 8;
       const alpha = 0.06 + Math.random() * 0.12;
       const dark = Math.random() > 0.5;
-      ctx.strokeStyle = dark
-        ? `rgba(0,0,0,${alpha})`
-        : `rgba(80,50,20,${alpha})`;
+      ctx.strokeStyle = dark ? `rgba(0,0,0,${alpha})` : `rgba(80,50,20,${alpha})`;
       ctx.lineWidth = 0.5 + Math.random() * 1.5;
       ctx.beginPath();
       ctx.moveTo(0, y0);
@@ -190,9 +184,9 @@ export class WeaponTextures {
     }
 
     const grad = ctx.createLinearGradient(0, 0, size, size);
-    grad.addColorStop(0,   'rgba(255,200,100,0.04)');
+    grad.addColorStop(0, 'rgba(255,200,100,0.04)');
     grad.addColorStop(0.5, 'rgba(255,200,100,0.08)');
-    grad.addColorStop(1,   'rgba(0,0,0,0.02)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.02)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, size, size);
 
@@ -205,7 +199,8 @@ export class WeaponTextures {
   /** Knife blade — stonewash / bead-blast + directional grind lines */
   static makeKnifeBladeTexture(size = 512): THREE.CanvasTexture {
     const c = document.createElement('canvas');
-    c.width = size; c.height = size;
+    c.width = size;
+    c.height = size;
     const ctx = c.getContext('2d')!;
 
     ctx.fillStyle = '#171717';
@@ -217,7 +212,7 @@ export class WeaponTextures {
       const v = Math.floor(Math.random() * 42) - 14;
       const base = 23;
       const clamp = (n: number) => Math.max(0, Math.min(255, n));
-      ctx.fillStyle = `rgb(${clamp(base+v)},${clamp(base+v)},${clamp(base+v+2)})`;
+      ctx.fillStyle = `rgb(${clamp(base + v)},${clamp(base + v)},${clamp(base + v + 2)})`;
       ctx.fillRect(x, y, 1.4, 1.4);
     }
 
@@ -235,7 +230,7 @@ export class WeaponTextures {
     }
 
     const grad = ctx.createLinearGradient(0, size * 0.72, 0, size);
-    grad.addColorStop(0,   'rgba(0,0,0,0)');
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
     grad.addColorStop(0.4, 'rgba(160,160,160,0.18)');
     grad.addColorStop(1.0, 'rgba(200,200,200,0.30)');
     ctx.globalAlpha = 1;
@@ -251,7 +246,8 @@ export class WeaponTextures {
   /** Compressed leather — stacked washer texture with pores + horizontal rings */
   static makeLeatherTexture(size = 256): THREE.CanvasTexture {
     const c = document.createElement('canvas');
-    c.width = size; c.height = size;
+    c.width = size;
+    c.height = size;
     const ctx = c.getContext('2d')!;
 
     ctx.fillStyle = '#150d04';
@@ -259,7 +255,7 @@ export class WeaponTextures {
 
     for (let i = 0; i < 28; i++) {
       const y = (i / 28) * size;
-      const alpha = 0.06 + Math.random() * 0.10;
+      const alpha = 0.06 + Math.random() * 0.1;
       ctx.strokeStyle = `rgba(255,180,80,${alpha})`;
       ctx.lineWidth = 0.8 + Math.random();
       ctx.beginPath();
@@ -279,9 +275,7 @@ export class WeaponTextures {
       const x = Math.random() * size;
       const y = Math.random() * size;
       const r = 0.5 + Math.random() * 1.2;
-      ctx.fillStyle = Math.random() > 0.5
-        ? 'rgba(0,0,0,0.6)'
-        : 'rgba(80,45,10,0.3)';
+      ctx.fillStyle = Math.random() > 0.5 ? 'rgba(0,0,0,0.6)' : 'rgba(80,45,10,0.3)';
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fill();
@@ -293,26 +287,24 @@ export class WeaponTextures {
     t.repeat.set(1, 4);
     return t;
   }
-
 }
-
 
 // ─── Shared texture instances (module singletons) ─────────────────────────────
 
-export const _metalTex      = WeaponTextures.makeMetalTexture(256, '#1c1c1c', 0.22);
-export const _metalNorm     = WeaponTextures.makeNormalFromCanvas(_metalTex, 1.2);
-export const _railTex       = WeaponTextures.makeRailTexture(256);
-export const _railNorm      = WeaponTextures.makeNormalFromCanvas(_railTex, 2.0);
-export const _barrelTex     = WeaponTextures.makeMetalTexture(256, '#111111', 0.10);
-export const _barrelNorm    = WeaponTextures.makeNormalFromCanvas(_barrelTex, 0.8);
+export const _metalTex = WeaponTextures.makeMetalTexture(256, '#1c1c1c', 0.22);
+export const _metalNorm = WeaponTextures.makeNormalFromCanvas(_metalTex, 1.2);
+export const _railTex = WeaponTextures.makeRailTexture(256);
+export const _railNorm = WeaponTextures.makeNormalFromCanvas(_railTex, 2.0);
+export const _barrelTex = WeaponTextures.makeMetalTexture(256, '#111111', 0.1);
+export const _barrelNorm = WeaponTextures.makeNormalFromCanvas(_barrelTex, 0.8);
 export const _knifeBladeTex = WeaponTextures.makeKnifeBladeTexture(512);
 export const _knifeBladeNrm = WeaponTextures.makeNormalFromCanvas(_knifeBladeTex, 1.8);
-export const _leatherTex    = WeaponTextures.makeLeatherTexture(256);
-export const _leatherNrm    = WeaponTextures.makeNormalFromCanvas(_leatherTex, 2.4);
-export const _stippleTex    = WeaponTextures.makeStipplingTexture(256);
-export const _stippleNorm   = WeaponTextures.makeNormalFromCanvas(_stippleTex, 3.0);
-export const _woodTex       = WeaponTextures.makeWoodTexture(256);
-export const _woodNorm      = WeaponTextures.makeNormalFromCanvas(_woodTex, 1.5);
+export const _leatherTex = WeaponTextures.makeLeatherTexture(256);
+export const _leatherNrm = WeaponTextures.makeNormalFromCanvas(_leatherTex, 2.4);
+export const _stippleTex = WeaponTextures.makeStipplingTexture(256);
+export const _stippleNorm = WeaponTextures.makeNormalFromCanvas(_stippleTex, 3.0);
+export const _woodTex = WeaponTextures.makeWoodTexture(256);
+export const _woodNorm = WeaponTextures.makeNormalFromCanvas(_woodTex, 1.5);
 
 // ─── Shared PBR materials ─────────────────────────────────────────────────────
 
@@ -328,7 +320,7 @@ export const matMetal = new THREE.MeshStandardMaterial({
   map: _railTex,
   normalMap: _railNorm,
   normalScale: new THREE.Vector2(1.2, 1.2),
-  roughness: 0.40,
+  roughness: 0.4,
   metalness: 0.85,
 });
 
@@ -372,11 +364,13 @@ export const matMuzzle = new THREE.MeshStandardMaterial({
 });
 
 // ─── Backward-compat named exports ──────────────────────────────────────────────────────────────────────────────────────
-export const hexToRgb             = (hex: string) => WeaponTextures.hexToRgb(hex);
-export const makeNormalFromCanvas  = (tex: THREE.CanvasTexture, strength = 1.5) => WeaponTextures.makeNormalFromCanvas(tex, strength);
-export const makeMetalTexture      = (size = 256, baseHex = '#1c1c1c', scratchAlpha = 0.18) => WeaponTextures.makeMetalTexture(size, baseHex, scratchAlpha);
-export const makeRailTexture       = (size = 256) => WeaponTextures.makeRailTexture(size);
-export const makeStipplingTexture  = (size = 256) => WeaponTextures.makeStipplingTexture(size);
-export const makeWoodTexture       = (size = 256) => WeaponTextures.makeWoodTexture(size);
+export const hexToRgb = (hex: string) => WeaponTextures.hexToRgb(hex);
+export const makeNormalFromCanvas = (tex: THREE.CanvasTexture, strength = 1.5) =>
+  WeaponTextures.makeNormalFromCanvas(tex, strength);
+export const makeMetalTexture = (size = 256, baseHex = '#1c1c1c', scratchAlpha = 0.18) =>
+  WeaponTextures.makeMetalTexture(size, baseHex, scratchAlpha);
+export const makeRailTexture = (size = 256) => WeaponTextures.makeRailTexture(size);
+export const makeStipplingTexture = (size = 256) => WeaponTextures.makeStipplingTexture(size);
+export const makeWoodTexture = (size = 256) => WeaponTextures.makeWoodTexture(size);
 export const makeKnifeBladeTexture = (size = 512) => WeaponTextures.makeKnifeBladeTexture(size);
-export const makeLeatherTexture    = (size = 256) => WeaponTextures.makeLeatherTexture(size);
+export const makeLeatherTexture = (size = 256) => WeaponTextures.makeLeatherTexture(size);

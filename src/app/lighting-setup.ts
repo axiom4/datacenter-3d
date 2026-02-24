@@ -6,11 +6,10 @@ import { ROOM_WIDTH, ROOM_DEPTH, WALL_HEIGHT } from './constants';
  * All shared geometries/materials are static; call LightingSetup.setup(scene).
  */
 export class LightingSetup {
-
   // ─── Shared lamp geometries/materials (created once for all fixtures) ─────
   static readonly housingGeo = new THREE.BoxGeometry(0.5, 0.1, 2.6);
-  static readonly panelGeo   = new THREE.BoxGeometry(0.4, 0.05, 2.4);
-  static readonly cableGeo   = new THREE.CylinderGeometry(0.01, 0.01, 0.2);
+  static readonly panelGeo = new THREE.BoxGeometry(0.4, 0.05, 2.4);
+  static readonly cableGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.2);
   static readonly housingMat = new THREE.MeshStandardMaterial({
     color: 0x333333,
     roughness: 0.5,
