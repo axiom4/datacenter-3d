@@ -11,10 +11,15 @@ import {
 } from './constants';
 
 // ─── Rack collision geometry ────────────────────────────────────────────────
-const RACK_ROW_CENTERS_X = [-4.55, -1.45, 1.45, 4.55];
+// Layout: 4 file ±4.2 / ±1.8 su X. Rack ruotati 90°: depth 1.2m → X, width 0.8m → Z.
+// Spaziatura Z 0.82m, 10 rack/fila: z₀=−4.10, z₉=+3.28.
+const RACK_ROW_CENTERS_X = [-4.2, -1.8, 1.8, 4.2];
 const COLLISION_PADDING = 0.3;
-const RACK_HALF_W = (1.0 + COLLISION_PADDING * 2) / 2;
-const RACK_HALF_L = (6.0 + COLLISION_PADDING * 2) / 2;
+const RACK_HALF_W = (1.2 + COLLISION_PADDING * 2) / 2; // semi-estensione mondo-X = 0.9m
+
+// Rack ±0.4m lungo Z dal centro + padding.
+const RACK_Z_MIN = -4.10 - 0.4 - COLLISION_PADDING; // ≈ -4.80
+const RACK_Z_MAX =  3.28 + 0.4 + COLLISION_PADDING; // ≈ +3.98
 const BOUNDARY_X = ROOM_WIDTH / 2 - PLAYER_BOUNDARY_MARGIN;
 const BOUNDARY_Z = ROOM_DEPTH / 2 - PLAYER_BOUNDARY_MARGIN;
 
@@ -45,6 +50,10 @@ export class MovementController {
     private readonly camera: THREE.PerspectiveCamera,
     private readonly controls: PointerLockControls,
   ) {}
+
+  get isMoving(): boolean {
+    return Math.abs(this.vForward) > 0.1 || Math.abs(this.vRight) > 0.1;
+  }
 
   onKeyChange(code: string, pressed: boolean): void {
     switch (KEY_MAP[code]) {
@@ -110,7 +119,7 @@ export class MovementController {
   }
 
   private collides(x: number, z: number): boolean {
-    if (z < -RACK_HALF_L || z > RACK_HALF_L) return false;
+    if (z < RACK_Z_MIN || z > RACK_Z_MAX) return false;
     return RACK_ROW_CENTERS_X.some((cx) => x > cx - RACK_HALF_W && x < cx + RACK_HALF_W);
   }
 

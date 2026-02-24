@@ -44,8 +44,8 @@ export class DatacenterBuilder {
 
   build(scene: THREE.Scene): void {
     const racksPerRow = 10;
-    const spacing = 0.605;
-    const aisleHalf = 2.5 / 2 + 0.3; // half aisle-width + margin
+    const spacing = 0.82;                         // 800mm rack + 20mm gap
+    const aisleHalf = RACK_DEPTH / 2 + 0.60;     // 0.6m half-depth + 0.6m cold-aisle half
 
     for (const aisleX of [-3, 3]) {
       for (let i = 0; i < racksPerRow; i++) {
@@ -73,9 +73,9 @@ export class DatacenterBuilder {
       panel.receiveShadow = true;
       rackGroup.add(panel);
     }
-    // Top panel
+    // Top panel — poggia sulla sommità dei montanti (y = frameH + metà spessore)
     const top = new THREE.Mesh(this.topGeo, this.frameMat);
-    top.position.set(0, frameH - 0.025, 0);
+    top.position.set(0, frameH + 0.025, 0);
     top.receiveShadow = true;
     rackGroup.add(top);
 
