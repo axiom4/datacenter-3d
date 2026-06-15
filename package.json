@@ -40,7 +40,7 @@
     "@types/three": "^0.184.1",
     "jsdom": "^29.1.1",
     "typescript": "~6.0.3",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.9"
   },
   "allowScripts": {
     "@parcel/watcher@2.5.6": true,
